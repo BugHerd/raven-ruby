@@ -105,6 +105,10 @@ module Raven
         Raven.logger.info "User excluded error: #{exc.inspect}"
         return nil
       end
+      unless configuration[:environments].include? configuration[:current_environment]
+        Raven.logger.info "Not sending message in #{configuration[:current_environment]} environment"
+        return nil
+      end
       new(options) do |evt|
         evt.message = "#{exc.class.to_s}: #{exc.message}"
         evt.level = :error
